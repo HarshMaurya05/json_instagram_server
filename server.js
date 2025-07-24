@@ -5,7 +5,7 @@ const fs = require("fs");
 const multer = require("multer");
 
 const server = jsonServer.create();
-const router = jsonServer.router("db.json");
+const router = jsonServer.router(path.join(__dirname, "db.json")); // ✅ FIXED
 const middlewares = jsonServer.defaults();
 
 const PORT = process.env.PORT || 3000;
@@ -50,8 +50,8 @@ server.post("/upload", upload.single("media"), (req, res) => {
   res.status(201).json(newItem);
 });
 
-// Serve uploaded files
-server.use("/uploads", jsonServer.router("public/uploads"));
+// ✅ FIXED - Serve uploaded files properly
+server.use("/uploads", jsonServer.static(path.join(__dirname, "public", "uploads")));
 
 server.use(router);
 server.listen(PORT, () => {
